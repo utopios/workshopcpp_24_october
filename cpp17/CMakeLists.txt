@@ -3,4 +3,4 @@ project(cpp17)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(cpp17  config.h main.cpp solution_w_2.cpp)
+add_executable(cpp17  config.h solution_w_2_exercises_3_and_4.cpp)
