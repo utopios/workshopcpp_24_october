@@ -2,6 +2,7 @@
 #include <optional>
 #include <variant>
 #include <filesystem>
+#include <any>
 #include "config.h";
 
 // 1. Inline variable (C++17)
@@ -100,5 +101,7 @@ int main() {
     // Demo 3: std::variant with additional functions
     std::variant<int, double, std::string> element = "C++ 17 is cool !";
     withVariant(element);
+
+    std::any myAny = "";
     return 0;
 }
