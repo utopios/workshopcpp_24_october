@@ -3,7 +3,9 @@
 #include <variant>
 #include <filesystem>
 #include <any>
-#include "config.h";
+#include "config.h"
+#include <vector>
+#include <execution>
 
 // 1. Inline variable (C++17)
 //inline const int global_value = 42;
@@ -86,6 +88,36 @@ void checkFileSystem() {
     }
 }
 
+// 9. Parallel algorithms (C++17)
+void parallelAlgorithmsDemo() {
+    const size_t dataSize = 1'000'000;  // One million elements
+    std::vector<int> data(dataSize);
+
+    // Initialize the data vector with values from 1 to dataSize
+    std::iota(data.begin(), data.end(), 1);
+
+    // Sequential sum (std::execution::seq)
+    auto start = std::chrono::high_resolution_clock::now();
+    long long seqSum = std::reduce(std::execution::seq, data.begin(), data.end(), 0LL);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto seqDuration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "Sequential sum: " << seqSum << " (Time: " << seqDuration << " ms)" << std::endl;
+
+    // Parallel sum (std::execution::par)
+    start = std::chrono::high_resolution_clock::now();
+    long long parSum = std::reduce(std::execution::par, data.begin(), data.end(), 0LL);
+    end = std::chrono::high_resolution_clock::now();
+    auto parDuration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "Parallel sum: " << parSum << " (Time: " << parDuration << " ms)" << std::endl;
+
+    // Parallel unsequenced sum (std::execution::par_unseq)
+    start = std::chrono::high_resolution_clock::now();
+    long long parUnseqSum = std::reduce(std::execution::par_unseq, data.begin(), data.end(), 0LL);
+    end = std::chrono::high_resolution_clock::now();
+    auto parUnseqDuration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "Parallel unsequenced sum: " << parUnseqSum << " (Time: " << parUnseqDuration << " ms)" << std::endl;
+}
+
 using namespace  std;
 int main() {
     std::cout << "Hello, World!" << std::endl;
@@ -103,5 +135,8 @@ int main() {
     withVariant(element);
 
     std::any myAny = "";
+
+
+    parallelAlgorithmsDemo();
     return 0;
 }
